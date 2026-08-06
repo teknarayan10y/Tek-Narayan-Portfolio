@@ -748,61 +748,71 @@ router.post('/contact', async (req, res) => {
     const rawPass = process.env.EMAIL_PASS || ''
     const emailPass = rawPass.replace(/\s+/g, '')
 
-    if (emailUser && emailPass) {
-      try {
-        // Configure Nodemailer with Port 587 STARTTLS (Render Cloud Compatible)
-        const transporter = nodemailer.createTransport({
-          host: 'smtp.gmail.com',
-          port: 587,
-          secure: false, // Use STARTTLS (Port 587) instead of SSL (Port 465) which is blocked on Render
-          requireTLS: true,
-          auth: {
-            user: emailUser,
-            pass: emailPass,
-          },
-          tls: {
-            rejectUnauthorized: false,
-          },
-          connectionTimeout: 15000, // 15 seconds connection timeout
-          greetingTimeout: 15000,
-          socketTimeout: 20000,
-        })
+        let emailSent = false
+        let emailError = null
 
-        const mailOptions = {
-          from: `"${name} (Portfolio Contact)" <${emailUser}>`,
-          to: ownerEmail,
-          replyTo: email,
-          subject: `📩 New Portfolio Contact: ${subject || 'Inquiry'} from ${name}`,
-          html: `
-            <div style="font-family: Arial, sans-serif; padding: 24px; color: #1e293b; max-width: 600px; border: 1px solid #e2e8f0; border-radius: 16px; background-color: #ffffff;">
-              <div style="background: linear-gradient(135deg, #4361ee, #7c3aed); padding: 16px 20px; border-radius: 12px; margin-bottom: 20px;">
-                <h2 style="color: #ffffff; margin: 0; font-size: 20px;">📩 New Contact Message Received!</h2>
-              </div>
-              <p style="margin: 6px 0;"><strong>Sender Name:</strong> ${name}</p>
-              <p style="margin: 6px 0;"><strong>Sender Email:</strong> <a href="mailto:${email}" style="color: #4361ee;">${email}</a></p>
-              <p style="margin: 6px 0;"><strong>Subject:</strong> ${subject || 'General Inquiry'}</p>
-              <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
-              <p style="margin-bottom: 8px;"><strong>Message Content:</strong></p>
-              <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 16px; border-radius: 10px; font-style: italic; white-space: pre-wrap; color: #334155; line-height: 1.6;">${message}</div>
-              <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
-              <p style="font-size: 12px; color: #64748b; margin: 0;">Sent directly from your 3D Portfolio Website Contact Form to <strong>${ownerEmail}</strong>.</p>
-            </div>
-          `,
+        if (emailUser && emailPass) {
+          try {
+            // Configure Nodemailer with Port 587 STARTTLS (Render Cloud Compatible)
+            const transporter = nodemailer.createTransport({
+              host: 'smtp.gmail.com',
+              port: 587,
+              secure: false, // Use STARTTLS (Port 587) instead of SSL (Port 465) which is blocked on Render
+              requireTLS: true,
+              auth: {
+                user: emailUser,
+                pass: emailPass,
+              },
+              tls: {
+                rejectUnauthorized: false,
+              },
+              connectionTimeout: 15000, // 15 seconds connection timeout
+              greetingTimeout: 15000,
+              socketTimeout: 20000,
+            })
+
+            const mailOptions = {
+              from: `"${name} (Portfolio Contact)" <${emailUser}>`,
+              to: ownerEmail,
+              replyTo: email,
+              subject: `📩 New Portfolio Contact: ${subject || 'Inquiry'} from ${name}`,
+              html: `
+                <div style="font-family: Arial, sans-serif; padding: 24px; color: #1e293b; max-width: 600px; border: 1px solid #e2e8f0; border-radius: 16px; background-color: #ffffff;">
+                  <div style="background: linear-gradient(135deg, #4361ee, #7c3aed); padding: 16px 20px; border-radius: 12px; margin-bottom: 20px;">
+                    <h2 style="color: #ffffff; margin: 0; font-size: 20px;">📩 New Contact Message Received!</h2>
+                  </div>
+                  <p style="margin: 6px 0;"><strong>Sender Name:</strong> ${name}</p>
+                  <p style="margin: 6px 0;"><strong>Sender Email:</strong> <a href="mailto:${email}" style="color: #4361ee;">${email}</a></p>
+                  <p style="margin: 6px 0;"><strong>Subject:</strong> ${subject || 'General Inquiry'}</p>
+                  <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
+                  <p style="margin-bottom: 8px;"><strong>Message Content:</strong></p>
+                  <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 16px; border-radius: 10px; font-style: italic; white-space: pre-wrap; color: #334155; line-height: 1.6;">${message}</div>
+                  <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
+                  <p style="font-size: 12px; color: #64748b; margin: 0;">Sent directly from your 3D Portfolio Website Contact Form to <strong>${ownerEmail}</strong>.</p>
+                </div>
+              `,
+            }
+
+            const mailResult = await transporter.sendMail(mailOptions)
+            console.log('✅ Contact email successfully dispatched to owner Gmail:', mailResult.response)
+            emailSent = true
+          } catch (mailErr) {
+            console.error('❌ Nodemailer Error sending email:', mailErr.message)
+            emailError = mailErr.message
+          }
+        } else {
+          console.log(`[Contact Notification] Message saved in DB! To send live emails to ${ownerEmail}, configure EMAIL_USER & EMAIL_PASS in Render Environment settings.`)
+          emailError = 'EMAIL_USER or EMAIL_PASS missing in Render environment variables'
         }
 
-        const mailResult = await transporter.sendMail(mailOptions)
-        console.log('✅ Contact email successfully dispatched to owner Gmail:', mailResult.response)
-      } catch (mailErr) {
-        console.error('❌ Nodemailer Error sending email:', mailErr.message)
-      }
-    } else {
-      console.log(`[Contact Notification] Message saved in DB! To send live emails to ${ownerEmail}, configure EMAIL_USER & EMAIL_PASS in server/.env`)
-    }
-
-    res.status(201).json({
-      success: true,
-      message: `Thank you ${name}! Your message has been saved in MongoDB and dispatched to the portfolio owner (${ownerEmail})!`,
-    })
+        res.status(201).json({
+          success: true,
+          emailSent,
+          emailError,
+          message: emailSent
+            ? `Thank you ${name}! Your message has been saved and sent to ${ownerEmail}!`
+            : `Thank you ${name}! Your message was saved in our database.`,
+        })
   } catch (err) {
     res.status(500).json({ error: err.message })
   }

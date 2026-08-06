@@ -1,6 +1,6 @@
 # 🚀 Premium 3D Interactive Portfolio Website
 
-An ultra-modern, highly interactive 3D Portfolio Website built with **React 19**, **Vite**, **Tailwind CSS v4**, **Framer Motion**, and a **Node.js + Express + MongoDB** backend.
+An ultra-modern,  Portfolio Website built with **React 19**, **Vite**, **Tailwind CSS v4**, **Framer Motion**, and a **Node.js + Express + MongoDB** backend.
 
 Features smooth micro-animations, dynamic particle physics, customized cursor effects, keyboard command palette, AI recruiter assistant, live chat FAQ bot, GitHub stats dashboard, and full-stack REST API capabilities with auto-seeding.
 
@@ -93,8 +93,8 @@ Features smooth micro-animations, dynamic particle physics, customized cursor ef
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/premium-3d-portfolio.git
-   cd premium-3d-portfolio
+   git clone https://github.com/teknarayan10y/Tek-Narayan-Portfolio.gitt
+   cd Tek-Narayan-Portfolio
    ```
 
 2. **Install dependencies**:
@@ -113,7 +113,7 @@ Features smooth micro-animations, dynamic particle physics, customized cursor ef
    MONGODB_URI=mongodb://127.0.0.1:27017/portfolio_db
 
    # Admin Auth Secret
-   ADMIN_SECRET=TekNarayan@123
+   ADMIN_SECRET=
    ```
 
 ---

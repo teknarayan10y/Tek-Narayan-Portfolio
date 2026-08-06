@@ -750,14 +750,22 @@ router.post('/contact', async (req, res) => {
 
     if (emailUser && emailPass) {
       try {
+        // Configure Nodemailer with Port 587 STARTTLS (Render Cloud Compatible)
         const transporter = nodemailer.createTransport({
           host: 'smtp.gmail.com',
-          port: 465,
-          secure: true,
+          port: 587,
+          secure: false, // Use STARTTLS (Port 587) instead of SSL (Port 465) which is blocked on Render
+          requireTLS: true,
           auth: {
             user: emailUser,
             pass: emailPass,
           },
+          tls: {
+            rejectUnauthorized: false,
+          },
+          connectionTimeout: 15000, // 15 seconds connection timeout
+          greetingTimeout: 15000,
+          socketTimeout: 20000,
         })
 
         const mailOptions = {

@@ -1,8 +1,21 @@
 // Frontend API Client with Fallback Data Support
 
+const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? '' : 'https://portfolio-backend-1dr5.onrender.com')
+
+function getUrl(endpoint) {
+  if (typeof endpoint === 'string' && (endpoint.startsWith('http://') || endpoint.startsWith('https://'))) {
+    return endpoint
+  }
+  return `${API_BASE}${endpoint}`
+}
+
+async function apiFetch(endpoint, options) {
+  return fetch(getUrl(endpoint), options)
+}
+
 async function getJSON(endpoint, fallback) {
   try {
-    const res = await fetch(endpoint)
+    const res = await apiFetch(endpoint)
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     const data = await res.json()
     if (data === null || data === undefined) return fallback
@@ -59,7 +72,7 @@ export async function fetchTestimonials(fallback) {
 
 export async function sendContactMessage(payload) {
   try {
-    const res = await fetch('/api/contact', {
+    const res = await apiFetch('/api/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
@@ -73,7 +86,7 @@ export async function sendContactMessage(payload) {
 
 export async function sendChatQuery(query, fallbackResponse) {
   try {
-    const res = await fetch('/api/chat', {
+    const res = await apiFetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query }),
@@ -88,7 +101,7 @@ export async function sendChatQuery(query, fallbackResponse) {
 
 export async function createProject(projectData, adminKey) {
   try {
-    const res = await fetch('/api/projects', {
+    const res = await apiFetch('/api/projects', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -106,7 +119,7 @@ export async function createProject(projectData, adminKey) {
 
 export async function deleteProjectById(id, adminKey) {
   try {
-    const res = await fetch(`/api/projects/${id}`, {
+    const res = await apiFetch(`/api/projects/${id}`, {
       method: 'DELETE',
       headers: {
         'x-admin-key': adminKey,
@@ -122,7 +135,7 @@ export async function deleteProjectById(id, adminKey) {
 
 export async function updateProject(id, projectData, adminKey) {
   try {
-    const res = await fetch(`/api/projects/${id}`, {
+    const res = await apiFetch(`/api/projects/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -140,7 +153,7 @@ export async function updateProject(id, projectData, adminKey) {
 
 export async function createSkillCategory(skillData, adminKey) {
   try {
-    const res = await fetch('/api/skills', {
+    const res = await apiFetch('/api/skills', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -158,7 +171,7 @@ export async function createSkillCategory(skillData, adminKey) {
 
 export async function deleteSkillCategoryById(id, adminKey) {
   try {
-    const res = await fetch(`/api/skills/${id}`, {
+    const res = await apiFetch(`/api/skills/${id}`, {
       method: 'DELETE',
       headers: {
         'x-admin-key': adminKey,
@@ -174,7 +187,7 @@ export async function deleteSkillCategoryById(id, adminKey) {
 
 export async function createBlogPost(postData, adminKey) {
   try {
-    const res = await fetch('/api/blog', {
+    const res = await apiFetch('/api/blog', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -192,7 +205,7 @@ export async function createBlogPost(postData, adminKey) {
 
 export async function deleteBlogPostById(id, adminKey) {
   try {
-    const res = await fetch(`/api/blog/${id}`, {
+    const res = await apiFetch(`/api/blog/${id}`, {
       method: 'DELETE',
       headers: {
         'x-admin-key': adminKey,
@@ -208,7 +221,7 @@ export async function deleteBlogPostById(id, adminKey) {
 
 export async function updateGitHubStats(githubData, adminKey) {
   try {
-    const res = await fetch('/api/github', {
+    const res = await apiFetch('/api/github', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -226,7 +239,7 @@ export async function updateGitHubStats(githubData, adminKey) {
 
 export async function createCertification(certData, adminKey) {
   try {
-    const res = await fetch('/api/certifications', {
+    const res = await apiFetch('/api/certifications', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -244,7 +257,7 @@ export async function createCertification(certData, adminKey) {
 
 export async function deleteCertificationById(id, adminKey) {
   try {
-    const res = await fetch(`/api/certifications/${id}`, {
+    const res = await apiFetch(`/api/certifications/${id}`, {
       method: 'DELETE',
       headers: {
         'x-admin-key': adminKey,
@@ -260,7 +273,7 @@ export async function deleteCertificationById(id, adminKey) {
 
 export async function createAchievement(achievementData, adminKey) {
   try {
-    const res = await fetch('/api/achievements', {
+    const res = await apiFetch('/api/achievements', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -278,7 +291,7 @@ export async function createAchievement(achievementData, adminKey) {
 
 export async function deleteAchievementById(id, adminKey) {
   try {
-    const res = await fetch(`/api/achievements/${id}`, {
+    const res = await apiFetch(`/api/achievements/${id}`, {
       method: 'DELETE',
       headers: {
         'x-admin-key': adminKey,
@@ -294,7 +307,7 @@ export async function deleteAchievementById(id, adminKey) {
 
 export async function updateAchievement(id, achievementData, adminKey) {
   try {
-    const res = await fetch(`/api/achievements/${id}`, {
+    const res = await apiFetch(`/api/achievements/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -312,7 +325,7 @@ export async function updateAchievement(id, achievementData, adminKey) {
 
 export async function createTestimonial(testimonialData) {
   try {
-    const res = await fetch('/api/testimonials', {
+    const res = await apiFetch('/api/testimonials', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -329,7 +342,7 @@ export async function createTestimonial(testimonialData) {
 
 export async function deleteTestimonialById(id, adminKey) {
   try {
-    const res = await fetch(`/api/testimonials/${id}`, {
+    const res = await apiFetch(`/api/testimonials/${id}`, {
       method: 'DELETE',
       headers: {
         'x-admin-key': adminKey,
@@ -345,7 +358,7 @@ export async function deleteTestimonialById(id, adminKey) {
 
 export async function fetchContactInfo(fallbackData) {
   try {
-    const res = await fetch('/api/contact/info')
+    const res = await apiFetch('/api/contact/info')
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     const data = await res.json()
     return data && data.name ? data : fallbackData
@@ -356,7 +369,7 @@ export async function fetchContactInfo(fallbackData) {
 
 export async function updateContactInfo(infoData, adminKey) {
   try {
-    const res = await fetch('/api/contact/info', {
+    const res = await apiFetch('/api/contact/info', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -374,7 +387,7 @@ export async function updateContactInfo(infoData, adminKey) {
 
 export async function createAIShowcase(aiData, adminKey) {
   try {
-    const res = await fetch('/api/ai-showcase', {
+    const res = await apiFetch('/api/ai-showcase', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -392,7 +405,7 @@ export async function createAIShowcase(aiData, adminKey) {
 
 export async function updateAIShowcase(id, aiData, adminKey) {
   try {
-    const res = await fetch(`/api/ai-showcase/${id}`, {
+    const res = await apiFetch(`/api/ai-showcase/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -410,7 +423,7 @@ export async function updateAIShowcase(id, aiData, adminKey) {
 
 export async function deleteAIShowcaseById(id, adminKey) {
   try {
-    const res = await fetch(`/api/ai-showcase/${id}`, {
+    const res = await apiFetch(`/api/ai-showcase/${id}`, {
       method: 'DELETE',
       headers: {
         'x-admin-key': adminKey,
@@ -426,7 +439,7 @@ export async function deleteAIShowcaseById(id, adminKey) {
 
 export async function fetchAboutInfo(fallbackData) {
   try {
-    const res = await fetch('/api/about')
+    const res = await apiFetch('/api/about')
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     const data = await res.json()
     return data && (data.name || data.title || data.bio) ? data : fallbackData
@@ -437,7 +450,7 @@ export async function fetchAboutInfo(fallbackData) {
 
 export async function updateAboutInfo(aboutData, adminKey) {
   try {
-    const res = await fetch('/api/about', {
+    const res = await apiFetch('/api/about', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -455,7 +468,7 @@ export async function updateAboutInfo(aboutData, adminKey) {
 
 export async function fetchExperienceTimeline(fallbackData) {
   try {
-    const res = await fetch('/api/experience')
+    const res = await apiFetch('/api/experience')
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     const data = await res.json()
     return Array.isArray(data) ? data : fallbackData
@@ -466,7 +479,7 @@ export async function fetchExperienceTimeline(fallbackData) {
 
 export async function createExperienceEntry(entryData, adminKey) {
   try {
-    const res = await fetch('/api/experience', {
+    const res = await apiFetch('/api/experience', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -484,7 +497,7 @@ export async function createExperienceEntry(entryData, adminKey) {
 
 export async function updateExperienceEntry(id, entryData, adminKey) {
   try {
-    const res = await fetch(`/api/experience/${id}`, {
+    const res = await apiFetch(`/api/experience/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -502,7 +515,7 @@ export async function updateExperienceEntry(id, entryData, adminKey) {
 
 export async function deleteExperienceEntryById(id, adminKey) {
   try {
-    const res = await fetch(`/api/experience/${id}`, {
+    const res = await apiFetch(`/api/experience/${id}`, {
       method: 'DELETE',
       headers: {
         'x-admin-key': adminKey,
@@ -518,7 +531,7 @@ export async function deleteExperienceEntryById(id, adminKey) {
 
 export async function fetchHeroData(fallbackData) {
   try {
-    const res = await fetch('/api/hero')
+    const res = await apiFetch('/api/hero')
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     const data = await res.json()
     return data && (data.name || data.tagline || data.roles) ? data : fallbackData
@@ -529,7 +542,7 @@ export async function fetchHeroData(fallbackData) {
 
 export async function updateHeroData(heroData, adminKey) {
   try {
-    const res = await fetch('/api/hero', {
+    const res = await apiFetch('/api/hero', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

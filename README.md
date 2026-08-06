@@ -199,7 +199,7 @@ This repository includes a `render.yaml` configuration for quick deployment on R
 
 **Tek Narayan Yadav**
 - Portfolio: Premium Interactive Portfolio
-- GitHub: [@TekNarayan]([https://github.com/](https://github.com/teknarayan10y))
+- GitHub: [@TekNarayan]([https://github.com/teknarayan10y])
 
 ---
 

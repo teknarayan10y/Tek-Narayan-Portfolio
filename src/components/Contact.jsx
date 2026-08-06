@@ -71,6 +71,7 @@ export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
   const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
+  const [formError, setFormError] = useState('')
 
   // Admin state
   const [adminKey, setAdminKey] = useState('')
@@ -173,11 +174,16 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSending(true)
-    await sendContactMessage(form)
+    setFormError('')
+    const res = await sendContactMessage(form)
     setSending(false)
-    setSent(true)
-    setForm({ name: '', email: '', subject: '', message: '' })
-    setTimeout(() => setSent(false), 5000)
+    if (res && res.success) {
+      setSent(true)
+      setForm({ name: '', email: '', subject: '', message: '' })
+      setTimeout(() => setSent(false), 5000)
+    } else {
+      setFormError(res?.error || 'Failed to send message. Please ensure the backend server is running.')
+    }
   }
 
   return (
@@ -308,6 +314,12 @@ export default function Contact() {
                     onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.1)')}
                   />
                 </div>
+
+                {formError && (
+                  <p className="text-red-400 text-xs px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-center font-mono">
+                    ⚠️ {formError}
+                  </p>
+                )}
 
                 <button
                   type="submit"

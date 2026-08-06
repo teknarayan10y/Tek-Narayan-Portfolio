@@ -751,7 +751,9 @@ router.post('/contact', async (req, res) => {
     if (emailUser && emailPass) {
       try {
         const transporter = nodemailer.createTransport({
-          service: process.env.EMAIL_SERVICE || 'gmail',
+          host: 'smtp.gmail.com',
+          port: 465,
+          secure: true,
           auth: {
             user: emailUser,
             pass: emailPass,

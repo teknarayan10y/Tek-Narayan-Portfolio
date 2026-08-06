@@ -1,6 +1,8 @@
 // Frontend API Client with Fallback Data Support
 
-const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? '' : 'https://portfolio-backend-1dr5.onrender.com')
+const API_BASE = import.meta.env.DEV
+  ? (import.meta.env.VITE_API_URL?.includes('localhost') ? import.meta.env.VITE_API_URL : '')
+  : (import.meta.env.VITE_API_URL || 'https://portfolio-backend-1dr5.onrender.com')
 
 function getUrl(endpoint) {
   if (typeof endpoint === 'string' && (endpoint.startsWith('http://') || endpoint.startsWith('https://'))) {
@@ -77,10 +79,14 @@ export async function sendContactMessage(payload) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     })
-    return await res.json()
+    const data = await res.json()
+    if (!res.ok) {
+      return { success: false, error: data.error || `HTTP ${res.status}` }
+    }
+    return { success: true, ...data }
   } catch (err) {
-    console.warn('[API] Contact submission fallback:', err.message)
-    return { success: true, message: 'Message sent (fallback response)' }
+    console.warn('[API] Contact submission error:', err.message)
+    return { success: false, error: err.message }
   }
 }
 

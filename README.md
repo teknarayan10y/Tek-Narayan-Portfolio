@@ -114,9 +114,6 @@ Features smooth micro-animations, dynamic particle physics, customized cursor ef
 
    # Admin Auth Secret
    ADMIN_SECRET=
-   ```
-   
-
     # Direct Email Notification Settings
     # To receive live emails in your inbox when someone submits the contact form:
      # 1. Set OWNER_EMAIL to your email address
@@ -125,6 +122,10 @@ Features smooth micro-animations, dynamic particle physics, customized cursor ef
      EMAIL_USER=
      EMAIL_PASS=
      EMAIL_SERVICE=
+   ```
+   
+
+   
 
 ---
 

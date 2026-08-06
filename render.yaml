@@ -1,0 +1,15 @@
+services:
+  # Express Backend API Service
+  - type: web
+    name: portfolio-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server/index.js
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: MONGODB_URI
+        sync: false
+      - key: ADMIN_SECRET
+        value: TekNarayan@123

@@ -1,0 +1,422 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --color-bg-deep: #050816;
+  --color-blue: #4361ee;
+  --color-cyan: #06b6d4;
+  --color-purple: #a855f7;
+  --color-pink: #ec4899;
+  --font-sans: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #050816;
+  color: #e2e8f0;
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #050816; }
+::-webkit-scrollbar-thumb { background: #4361ee; border-radius: 2px; }
+
+/* Animated gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #4361ee, #06b6d4, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-warm {
+  background: linear-gradient(135deg, #06b6d4, #a855f7, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass morphism */
+.glass {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Glow effects */
+.glow-blue {
+  box-shadow: 0 0 20px rgba(67, 97, 238, 0.35), 0 0 40px rgba(67, 97, 238, 0.15);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.35), 0 0 40px rgba(6, 182, 212, 0.15);
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.35), 0 0 40px rgba(168, 85, 247, 0.15);
+}
+
+/* Particle canvas */
+#particle-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Aurora background */
+.aurora {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.aurora::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -20%;
+  width: 80%;
+  height: 80%;
+  background: radial-gradient(ellipse, rgba(67, 97, 238, 0.12) 0%, transparent 70%);
+  animation: aurora-drift-1 18s ease-in-out infinite alternate;
+  border-radius: 50%;
+  filter: blur(60px);
+}
+
+.aurora::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  right: -10%;
+  width: 70%;
+  height: 70%;
+  background: radial-gradient(ellipse, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
+  animation: aurora-drift-2 22s ease-in-out infinite alternate;
+  border-radius: 50%;
+  filter: blur(80px);
+}
+
+@keyframes aurora-drift-1 {
+  0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  100% { transform: translate(8%, 12%) rotate(30deg) scale(1.2); }
+}
+
+@keyframes aurora-drift-2 {
+  0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  100% { transform: translate(-6%, -8%) rotate(-20deg) scale(1.15); }
+}
+
+.aurora-cyan {
+  position: fixed;
+  top: 20%;
+  right: 10%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(ellipse, rgba(6, 182, 212, 0.07) 0%, transparent 70%);
+  animation: aurora-drift-3 26s ease-in-out infinite alternate;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes aurora-drift-3 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-5%, 10%) scale(1.1); }
+}
+
+/* Float animations */
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes float-y-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spin-reverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@keyframes typing-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.animate-float { animation: float-y 4s ease-in-out infinite; }
+.animate-float-slow { animation: float-y-slow 6s ease-in-out infinite; }
+.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+.animate-spin-slow { animation: spin-slow 20s linear infinite; }
+.animate-spin-reverse { animation: spin-reverse 15s linear infinite; }
+
+/* Progress ring */
+.progress-ring-circle {
+  transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+/* Timeline dot pulse */
+@keyframes ping-slow {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+/* Gradient border */
+.gradient-border {
+  position: relative;
+}
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(67, 97, 238, 0.5), rgba(168, 85, 247, 0.5), rgba(6, 182, 212, 0.5));
+  z-index: -1;
+}
+
+/* Typewriter cursor */
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: #06b6d4;
+  margin-left: 2px;
+  vertical-align: middle;
+  animation: typing-cursor 1s step-end infinite;
+}
+
+/* Scroll indicator */
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(8px); opacity: 0.4; }
+}
+
+/* Card tilt */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease;
+}
+
+/* Magnetic button effect */
+.magnetic-btn {
+  transition: transform 0.2s ease;
+}
+
+/* Section fade in */
+.section-hidden {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.section-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Command palette overlay */
+.cmd-overlay {
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.cmd-panel {
+  animation: slideUp 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Cursor trail */
+.cursor-dot {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(6, 182, 212, 0.8);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s, height 0.2s, opacity 0.2s;
+}
+
+.cursor-ring {
+  position: fixed;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(67, 97, 238, 0.5);
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease, width 0.3s, height 0.3s;
+}
+
+/* Skill badge hover */
+.skill-badge {
+  transition: all 0.3s ease;
+}
+.skill-badge:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(67, 97, 238, 0.3);
+}
+
+/* Chat bubble animation */
+@keyframes chat-appear {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-message {
+  animation: chat-appear 0.3s ease forwards;
+}
+
+/* Star field */
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+  animation: twinkle var(--duration, 4s) ease-in-out infinite var(--delay, 0s);
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: var(--min-opacity, 0.2); }
+  50% { opacity: 1; }
+}
+
+/* Noise texture overlay */
+.noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.4;
+}
+
+/* Grid lines background */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(67, 97, 238, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(67, 97, 238, 0.06) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Scan line effect */
+@keyframes scan {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(100vh); }
+}
+
+/* Light theme overrides */
+html.light {
+  color-scheme: light;
+}
+
+html.light body {
+  background-color: #f4f7fe;
+  background-image: linear-gradient(135deg, #edf2fc 0%, #f7f0fd 50%, #f0f7fe 100%);
+  color: #0f172a;
+}
+
+html.light .glass {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(67, 97, 238, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+html.light .glass-strong {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(67, 97, 238, 0.22);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+html.light .text-white {
+  color: #0f172a;
+}
+
+html.light .text-white\/90,
+html.light .text-white\/80,
+html.light .text-white\/75,
+html.light .text-white\/70,
+html.light .text-white\/65,
+html.light .text-white\/60 {
+  color: #334155;
+}
+
+html.light .text-white\/55,
+html.light .text-white\/50,
+html.light .text-white\/45,
+html.light .text-white\/40,
+html.light .text-white\/35,
+html.light .text-white\/30,
+html.light .text-white\/25,
+html.light .text-white\/20,
+html.light .text-white\/15,
+html.light .text-white\/10 {
+  color: #64748b;
+}
+
+html.light nav {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-color: rgba(67, 97, 238, 0.2) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+}
+
+html.light .grid-bg {
+  background-image:
+    linear-gradient(rgba(67, 97, 238, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(67, 97, 238, 0.08) 1px, transparent 1px);
+}
+
+html.light #particle-canvas {
+  opacity: 0.35;
+}
+
